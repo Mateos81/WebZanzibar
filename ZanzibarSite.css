@@ -1,0 +1,67 @@
+footer,
+nav,
+section {
+	display: block;
+	margin-top: 100px;
+}
+
+header ,
+.banderole {
+	text-align: center;
+	background-position: center;
+}
+
+.banderole {
+	margin-top: 50px;
+	height: 100px;
+}
+
+body {
+	/* TODO: Changer image */
+	margin: auto;
+	width: 85%;
+	background-image: url('Images/Zanzibar-Z-Logo.png');
+	background-size: 100%;
+}
+
+
+
+header {
+	height: 200px;
+	background-repeat: no-repeat;
+	background-image: url('Images/Zanzibar-logo2.png');
+	background-size: 500px 200px;
+}
+
+.banderole-link {
+	background: linear-gradient(#330099, #00CCFF, #330099);
+	background-position: center;
+	padding: 20px;
+	margin: -5px;
+	color: white;
+	font-family: "Stencil", Georgia, Serif;
+}
+
+.banderole a {
+	text-decoration: none;
+}
+
+.banderole a:hover {
+	color: #990033;
+}
+
+.banderole li {
+	display: inline;
+	margin: 0px;
+	border: 0px;
+	padding: 0px;
+	/*background: radial-gradient(#00CCFF, #330099);
+	background-position: center;
+	padding: 20px
+	border: 2px;*/
+}
+
+article {
+	background-color: white;
+	margin: 10px;
+}

@@ -21,7 +21,7 @@
 
                 btn_edit.disabled = isSelectedArticleEmpty;
                 btn_suppression.disabled = isSelectedArticleEmpty;
-                
+
                 // TODO Vider les champs du formulaire
                 // TODO Libellé bouton Ajout / MAJ
             }
@@ -134,7 +134,8 @@
                     // ICI
                     // Gestion du mode Edition
                     $titleEdition= $contentEdition= "";
-                    
+                    $texteBouton= "Ajout";
+
                     if (session_status() != PHP_SESSION_NONE)
                     {
                         if (isset($_SESSION['connexion']) AND isset($_SESSION['edition']))
@@ -143,29 +144,60 @@
                             {
                                 // Récupération de la combinaison Date - Titre
                                 $full_title= $_SESSION['edition'];
-                                
+
                                 // Découpage en deux variables
-                                $res= decoupage_full_title($full_title);
-                                $date= $res[0];
-                                $title= $res[1];
-                                
+                                $resEdition= decoupage_full_title($full_title);
+                                $date= $resEdition[0];
+                                $title= $resEdition[1];
+
+                                // Pour le titre, on l'a retraité dans le cas où il était trop long,
+                                // il faut donc vérifier si on a un titre long,
+                                // auquel cas il faut enlever les points de suspension
+                                // TODO Titres à la con (juste "...", ...)...
+                                $title= str_replace("...", "", $title);
+
                                 // Récupération des données
-                                $req= "SELECT * FROM articles WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "*';";
-                                $res= mysqli_query($con, $req);
-                                
-                                // TODO Remplissage des champs correspondant du formulaire
-                                //txtb_titre
-                                //ta_content
-                                while ($row = mysqli_fetch_assoc($res))
+                                $reqEdition=
+                                "SELECT * FROM articles " .
+                                "WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "%';";
+                                //echo $reqEdition;
+                                //echo "<br />";
+                                $resEdition= mysqli_query($con, $reqEdition);
+
+                                // Remplissage des champs correspondant du formulaire :
+                                // txtb_titre et ta_content
+                                while ($rowEdition = mysqli_fetch_assoc($resEdition))
                                 {
-                                    $titleEdition= $row["Title"];
-                                    $contentEdition= $row["Content"];
+                                    $titleEdition= $rowEdition['Title'];
+                                    $contentEdition= $rowEdition['Content'];
                                 }
-                                
+
+                                //echo "Titre à éditer : " . $titleEdition;
+                                //echo "<br />";
+                                //echo "Contenu à éditer : " . $contentEdition;
+                                //echo "<br />";
+
                                 // TODO Changement de libellé pour le bouton
-                                
-                                // Traitement terminé, on unset la variable de session
+                                $texteBouton= "Mise à jour";
+
+                                // Traitement terminé, on unset la variable de session,
+                                // pour éviter tout soucis (refresh, ...)
                                 unset($_SESSION['edition']);
+
+                                // Comme on a unset cet variable, ça devient compliqué de générer
+                                // une requête UPDATE : on va donc créer une variable de session
+                                // contenant une requête à finir de construire.
+                                // On dispose toujours de titleEdition et contentEdition ici.
+                                // Il suffira de remplacer SET.
+                                // Cette variable permet aussi de savoir que nous sommes en mode Edition.
+                                // TODO Image
+                                $reqUpdate=
+                                "UPDATE articles " .
+                                "SET " .
+                                "WHERE Title LIKE '" . str_replace("'", "''", $titleEdition) . "%' " .
+                                "AND Content = '" . str_replace("'", "''", $contentEdition) . "';";
+
+                                $_SESSION['rqtUpdate']= $reqUpdate;
                             }
                         }
                     }
@@ -183,11 +215,11 @@
                                             // Formatage de la date vers un format plus français
                                             $date_tmp= date_create($row["Date"]);
                                             $date= date_format($date_tmp, "d/m/Y");
-                                            
+
                                             // Si le titre est trop long, on le crop
                                             $title= $row["Title"];
                                             $title= strlen($title) > 23 ? substr($title, 0, 20) . "..." : $title;
-                                            
+
                                             // Le formatage est prêt à être intégré au select
                                             echo "<option>" . $date . " - " . $title . "</option>";
                                         }
@@ -204,9 +236,10 @@
                             </td>
                         </tr>
                     </table>
-                    <input type="text" name="txtb_titre"><?php echo $titleEdition; ?><input type="text" name="txtb_upload"><br />
+                    <input type="text" name="txtb_titre" value="<?php echo $titleEdition; ?>"/>
+                    <input type="text" name="txtb_upload"/><br />
                     <textarea name="ta_content" cols="50" rows="5"><?php echo $contentEdition; ?></textarea><br />
-                    <button id="btn_ajout_maj" name="btn_ajout_maj" type="submit">Ajout</button>
+                    <button id="btn_ajout_maj" name="btn_ajout_maj" type="submit"><?php echo $texteBouton; ?></button>
                 </form>
             </div>
         </span>

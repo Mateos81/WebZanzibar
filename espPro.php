@@ -32,7 +32,7 @@
             <header></header>
         </div>
         <div id="banderole">
-                <a href="index.html" class=banderole-link>Accueil</a>
+                <a href="index.php" class=banderole-link>Accueil</a>
                 <a href="photos.html" class=banderole-link>Photos</a>
                 <a href="contact.html" class=banderole-link>Contact</a>
                 <a href="espPro.php" class=banderole-link>Espace Pro</a>
@@ -99,40 +99,39 @@
         </div>
 
         <?php
+            // Génération des 3 boutons
             if ($logged)
             {
                 echo
                     "<div style=\"text-align: center;\">
-                        <button id=\"ajout_article\" class=\"btn_espPro\" type=\"button\">Ajouter un nouvel article</button>
-                        <button id=\"ajout_event\" class=\"btn_espPro\" type=\"button\">Ajouter un nouvel événement</button>
-                        <button id=\"ajout_util\" class=\"btn_espPro\" type=\"button\">Ajouter un nouvel Administrateur</button>
+                        <form action=\"php/form_btn_espPro.php\" method=\"post\">
+                            <button id=\"ajout_article\" name=\"ajout_article\" class=\"btn_espPro\" type=\"submit\">Ajouter un nouvel article</button>
+                            <button id=\"ajout_event\" name=\"ajout_event\" class=\"btn_espPro\" type=\"button\">Ajouter un nouvel événement</button>
+                            <button id=\"ajout_util\" name=\"ajout_util\" class=\"btn_espPro\" type=\"submit\">Ajouter un nouvel Administrateur</button>
+                        </form>
                     </div>";
             }
         ?>
 
-        <!-- TODO Après tests, générer en PHP -->
         <?php
-            // Connexion, construction directe de la requête, exécution, récupération résultat
-            $server= "localhost";
-            $user= "root";
-            $password= "";
-            $base= "zanzibar";
-            $con= mysqli_connect($server, $user, $password, $base);
-            if (mysqli_connect_errno($con))
+            if (isset($_SESSION['ajout_article']))
             {
-                echo "<p style=\"color: #580000 ;\">Erreur de connexion : " . mysqli_connect_error() . "</p>";
-                return;
-            }
+                // Mode Ajout article
+                if ($_SESSION['ajout_article'])
+                {
+                    // Connexion, construction directe de la requête, exécution, récupération résultat
+                    $con= connexion();
 
-            $req= "SELECT * FROM articles ORDER BY Date DESC;";
-            $res= mysqli_query($con, $req); // mysqli_query retourne un objet mysqli_result
-        ?>
-        <span style="text-align: center;">
-            <div class="span_espPro">
-                <?php
-                    // FIXME
+                    $req= "SELECT * FROM articles ORDER BY Date DESC;";
+                    $res= mysqli_query($con, $req); // mysqli_query retourne un objet mysqli_result
+
+                    echo
+                        "<span style=\"text-align: center;\">
+                            <div class=\"span_espPro\">";
+
                     // ICI
                     // Gestion du mode Edition
+                    // TODO En mode Edition, sélectionner la bonne ligne dans le select
                     $titleEdition= $contentEdition= "";
                     $texteBouton= "Ajout";
 
@@ -172,12 +171,7 @@
                                     $contentEdition= $rowEdition['Content'];
                                 }
 
-                                //echo "Titre à éditer : " . $titleEdition;
-                                //echo "<br />";
-                                //echo "Contenu à éditer : " . $contentEdition;
-                                //echo "<br />";
-
-                                // TODO Changement de libellé pour le bouton
+                                // Changement de libellé pour le bouton
                                 $texteBouton= "Mise à jour";
 
                                 // Traitement terminé, on unset la variable de session,
@@ -201,48 +195,122 @@
                             }
                         }
                     }
-                ?>
-                <form action="php/form_article.php" method="post">
-                    <label id="lbl_articles" style="text-align: center;">Articles</label><br />
-                    <table>
-                        <tr>
-                            <td rowspan="2">
-                                <select id="slct_articles" name="slct_articles" size="3" onchange="maj_form_ajout_article()">
-                                    <option selected></option>
-                                    <?php
-                                        while ($row = mysqli_fetch_assoc($res))
-                                        {
-                                            // Formatage de la date vers un format plus français
-                                            $date_tmp= date_create($row["Date"]);
-                                            $date= date_format($date_tmp, "d/m/Y");
 
-                                            // Si le titre est trop long, on le crop
-                                            $title= $row["Title"];
-                                            $title= strlen($title) > 23 ? substr($title, 0, 20) . "..." : $title;
+                    echo
+                        "<form action=\"php/form_article.php\" method=\"post\">
+                            <label id=\"lbl_articles\" style=\"text-align: center;\">Articles</label><br />
+                            <table>
+                                <tr>
+                                    <td rowspan=\"2\">
+                                        <select id=\"slct_articles\" name=\"slct_articles\" size=\"3\" onchange=\"maj_form_ajout_article()\">
+                                            <option selected></option>";
 
-                                            // Le formatage est prêt à être intégré au select
-                                            echo "<option>" . $date . " - " . $title . "</option>";
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                            <td>
-                                <button id="btn_edit" name="btn_edit" disabled>Editer</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button id="btn_suppression" name="btn_suppression" disabled>Supprimer</button>
-                            </td>
-                        </tr>
-                    </table>
-                    <input type="text" name="txtb_titre" value="<?php echo $titleEdition; ?>"/>
-                    <input type="text" name="txtb_upload"/><br />
-                    <textarea name="ta_content" cols="50" rows="5"><?php echo $contentEdition; ?></textarea><br />
-                    <button id="btn_ajout_maj" name="btn_ajout_maj" type="submit"><?php echo $texteBouton; ?></button>
-                </form>
-            </div>
-        </span>
+                    // Remplissage de l'objet select avec les articles en base de données
+                    while ($row = mysqli_fetch_assoc($res))
+                    {
+                        // Formatage de la date vers un format plus français
+                        $date_tmp= date_create($row["Date"]);
+                        $date= date_format($date_tmp, "d/m/Y");
+
+                        // Si le titre est trop long, on le crop
+                        $title= $row["Title"];
+                        $title= strlen($title) > 23 ? substr($title, 0, 20) . "..." : $title;
+
+                        // Le formatage est prêt à être intégré au select
+                        echo "<option>" . $date . " - " . $title . "</option>";
+                    }
+
+                    echo
+                                            "</select>
+                                        </td>
+                                        <td>
+                                            <button id=\"btn_edit\" name=\"btn_edit\" disabled>Editer</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <button id=\"btn_suppression\" name=\"btn_suppression\" disabled>Supprimer</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <input type=\"text\" name=\"txtb_titre\" value=\"" . $titleEdition . "\"/>
+                                <input type=\"text\" name=\"txtb_upload\"/><br />
+                                <textarea name=\"ta_content\" cols=\"50\" rows=\"5\">" . $contentEdition . "</textarea><br />
+                                <button id=\"btn_ajout_maj\" name=\"btn_ajout_maj\" type=\"submit\">" . $texteBouton . "</button>
+                            </form>
+                        </div>
+                    </span>";
+
+                    // Sortie propre
+                    // Il y a des reloads pour le mode Edition, pas possible de nettoyer la variable ^^'
+                    //unset($_SESSION['ajout_article']);
+                }
+            }
+            else if (isset($_SESSION['ajout_util']))
+            {
+                // Mode Ajout admin
+                if ($_SESSION['ajout_util'])
+                {
+                    // Selon la variable de session ajout_util_succes
+                    if (isset($_SESSION['ajout_util_succes']))
+                    {
+                        if ($_SESSION['ajout_util_succes'] == "ok")
+                        {
+                            echo "<p style=\"color: green;\">Nouvel admin ajouté avec succès.</p>";
+
+                            // Nettoyage
+                            unset($_SESSION['ajout_util']);
+                        }
+                        else if ($_SESSION['ajout_util_succes'] == "mdp")
+                        {
+                            echo "<p style=\"color: red;\">Mots de passe différents !</p>";
+                        }
+                        else if ($_SESSION['ajout_util_succes'] == "login")
+                        {
+                            echo "<p style=\"color: red;\">Login déjà existant !</p>";
+                        }
+
+                        unset($_SESSION['ajout_util_succes']);
+                    }
+
+                    echo
+                        "<form action=\"php/form_admin.php\" method=\"post\">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label>Pseudo</label>
+                                    </td>
+                                    <td>
+                                        <input type=\"text\" name=\"txtb_login\"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Mot de passe</label>
+                                    </td>
+                                    <td>
+                                        <input type=\"password\" name=\"txtb_mdp1\"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Retaper Mot de passe</label>
+                                    </td>
+                                    <td>
+                                        <input type=\"password\" name=\"txtb_mdp2\"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td rowspan=\"2\">
+                                        <button id=\"btn_ajout_admin\" name=\"btn_ajout_admin\" type=\"submit\">Ajouter</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>";
+                }
+                // TODO Calendar
+            }
+        ?>
 
         <footer></footer>
     </body>

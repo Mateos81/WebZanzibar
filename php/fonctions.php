@@ -2,6 +2,27 @@
     //session_start();
     
     /**
+     * Connexion à la base de données de Zanzibar.
+     *
+     * @return L'objet connexion pour être utilisé au travers de requêtes.
+     */
+    function connexion()
+    {
+        $server= "localhost";
+        $user= "root";
+        $password= "";
+        $base= "zanzibar";
+        $con= mysqli_connect($server, $user, $password, $base);
+        if (mysqli_connect_errno($con))
+        {
+            echo "<p style=\"color: #580000 ;\">Erreur de connexion : " . mysqli_connect_error() . "</p>";
+            return;
+        }
+        
+        return $con;
+    }
+    
+    /**
      * Prend un titre complet au format "dd/mm/yyyy - Title",
      * et le découpe en deux variables prêtes à être utilisées dans une requête.
      *

@@ -236,7 +236,6 @@ span img {
 /*************************************************** Espace Pro ************************************************/
 
 #login {
-
     text-align: center;
     width: 100%;
 }
@@ -257,16 +256,22 @@ span img {
 .btn_espPro {
     width: 20%;
     height: 100px;
-    margin-left: 35px;
-    margin-top: 50px;
+    margin: 20px;
     font-size: 20px;
     font-style: bold;
 }
 
-.span_espPro {
+.div_espPro {
+    background: rgba(255, 255, 255, 0.5);
     display: inline-block;
     margin-left: 25%;
     margin-right: 25%;
     text-align: left;
+    width: 50%;
+}
+
+.span_espPro {
+    display: inline-block;
+    text-align: center;
     width: 100%;
 }

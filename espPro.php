@@ -126,8 +126,8 @@
                     $res= mysqli_query($con, $req); // mysqli_query retourne un objet mysqli_result
 
                     echo
-                        "<span style=\"text-align: center;\">
-                            <div class=\"span_espPro\">";
+                        "<span class=\"span_espPro\">
+                            <div class=\"div_espPro\">";
 
                     // ICI
                     // Gestion du mode Edition
@@ -198,7 +198,9 @@
 
                     echo
                         "<form action=\"php/form_article.php\" method=\"post\">
-                            <label id=\"lbl_articles\" style=\"text-align: center;\">Articles</label><br />
+                            <div style=\"text-align: center;\">
+                                <label id=\"lbl_articles\">Articles</label><br />
+                            </div>
                             <table>
                                 <tr>
                                     <td rowspan=\"2\">
@@ -236,7 +238,9 @@
                                 <input type=\"text\" name=\"txtb_titre\" value=\"" . $titleEdition . "\"/>
                                 <input type=\"text\" name=\"txtb_upload\"/><br />
                                 <textarea name=\"ta_content\" cols=\"50\" rows=\"5\">" . $contentEdition . "</textarea><br />
-                                <button id=\"btn_ajout_maj\" name=\"btn_ajout_maj\" type=\"submit\">" . $texteBouton . "</button>
+                                <div style=\"text-align: center;\">
+                                    <button id=\"btn_ajout_maj\" name=\"btn_ajout_maj\" type=\"submit\">" . $texteBouton . "</button>
+                                </div>
                             </form>
                         </div>
                     </span>";
@@ -274,39 +278,45 @@
                     }
 
                     echo
-                        "<form action=\"php/form_admin.php\" method=\"post\">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label>Pseudo</label>
-                                    </td>
-                                    <td>
-                                        <input type=\"text\" name=\"txtb_login\"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Mot de passe</label>
-                                    </td>
-                                    <td>
-                                        <input type=\"password\" name=\"txtb_mdp1\"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Retaper Mot de passe</label>
-                                    </td>
-                                    <td>
-                                        <input type=\"password\" name=\"txtb_mdp2\"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td rowspan=\"2\">
-                                        <button id=\"btn_ajout_admin\" name=\"btn_ajout_admin\" type=\"submit\">Ajouter</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>";
+                        "<div class=\"div_espPro\">
+                            <form action=\"php/form_admin.php\" method=\"post\">
+                                <div style=\"margin-left: 25%; width: 100%;\">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <label>Pseudo</label>
+                                            </td>
+                                            <td>
+                                                <input type=\"text\" name=\"txtb_login\"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Mot de passe</label>
+                                            </td>
+                                            <td>
+                                                <input type=\"password\" name=\"txtb_mdp1\"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Retaper Mot de passe</label>
+                                            </td>
+                                            <td>
+                                                <input type=\"password\" name=\"txtb_mdp2\"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan=\"2\">
+                                                <div style=\"text-align: center;\">
+                                                    <button id=\"btn_ajout_admin\" name=\"btn_ajout_admin\" type=\"submit\">Ajouter</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>";
                 }
                 // TODO Calendar
             }

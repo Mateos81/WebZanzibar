@@ -16,7 +16,16 @@
             if ($_SESSION['connexion'])
             {
                 // Connexion à la base de données
-                $con= connexion();
+                $server= "localhost";
+                $user= "root";
+                $password= "";
+                $base= "zanzibar";
+                $con= mysqli_connect($server, $user, $password, $base);
+                if (mysqli_connect_errno($con))
+                {
+                    echo "<p style=\"color: red;\">Erreur de connexion : " . mysqli_connect_error() . "</p>";
+                    return;
+                }
 
                 /*
                  * Split des actions selon quel bouton a été préssé

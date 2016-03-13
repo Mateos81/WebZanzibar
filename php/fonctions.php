@@ -51,4 +51,74 @@
         session_destroy();
         header('Location: espPro.php');
     }
+	
+	function ajoutImage($fichier)
+	{
+		// On rajoute le nom du fichier dans le fichier xml
+			$xmlFile = "../xml/images.xml";
+			
+			$handle = fopen($xmlFile, "r");
+			$contenu = fread($handle, filesize($xmlFile));
+			fclose($handle);
+			
+			// On vérifie que le fichier xml ne contient pas déjà le fichier
+			if (!strrpos($contenu, $fichier))
+			{			
+				$contenu = substr($contenu, 0, strrpos($contenu, '</IMAGES>'));
+				$fp=fopen($xmlFile,"w");
+				fwrite($fp,$contenu .
+				'<IMG>' . $fichier . '</IMG>
+				</IMAGES>');
+			}
+		
+	}
+	
+	function supprImages($fichier)
+	{
+		// On rajoute le nom du fichier dans le fichier xml
+			$xmlFile = "../xml/images.xml";
+			
+			$handle = fopen($xmlFile, "r");
+			$contenu = fread($handle, filesize($xmlFile));
+			fclose($handle);
+						
+			// On vérifie que le fichier xml contient le fichier
+			if (strrpos($contenu, $fichier))
+			{			
+				$contenu = str_replace('<IMG>' . $fichier . '</IMG>', '', $contenu);
+				$fp=fopen($xmlFile,"w");
+				fwrite($fp,$contenu);
+			}
+		
+	}
+	
+	function nbImgs() {
+		$xmlFile = "../xml/images.xml";
+		$handle = fopen($xmlFile, "r");
+		$contenu = fread($handle, filesize($xmlFile));
+		fclose($handle);
+		
+		return substr_count($contenu, '<IMG>');
+	}
+	
+	function verifCoche() {
+		
+		$url = 'http://localhost/zanzibar/test.html';
+		$doc = new DOMDocument();
+		$doc->loadHTMLFile("http://localhost/zanzibar/test.html");
+		echo "test" . $doc->getElementById('img0');
+		/*for ($i = 0; $i < nbImgs(); $i = $i + 1)
+		{
+			if (isset($_POST['cb' + $i]))
+			{
+				$doc = new DomDocument;
+				$doc->validateOnParse = true;
+				$doc->Load('http://localhost/zanzibar/test.html');
+				return $doc->getElementById('img' . $i);				
+			}
+				
+		}*/
+		
+	}
+	
 ?>

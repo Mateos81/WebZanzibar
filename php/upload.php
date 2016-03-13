@@ -1,5 +1,7 @@
 <?php
-
+	
+	include("fonctions.php");
+	
 	$dossier = '../Images/';
 	$fichier = basename($_FILES['openFileDialog']['name']);
 	$taille_maxi = 1000000;
@@ -25,27 +27,12 @@
 		 if(move_uploaded_file($_FILES['openFileDialog']['tmp_name'], $dossier . $fichier)) //Si la fonction renvoie TRUE, c'est que ça a fonctionné...
 		 {
 			//echo 'Upload effectue avec succes !';
+			ajoutImage($fichier);
 			
-			// On rajoute le nom du fichier dans le fichier xml
-			$xmlFile = "../xml/images.xml";
-			
-			$handle = fopen($xmlFile, "r");
-			$contenu = fread($handle, filesize($xmlFile));
-			fclose($handle);
-			
-			// On vérifie que le fichier xml ne contient pas déjà le fichier
-			if (!strrpos($contenu, $fichier))
-			{			
-				$contenu = substr($contenu, 0, strrpos($contenu, '</IMAGES>'));
-				$fp=fopen($xmlFile,"w");
-				fwrite($fp,$contenu .
-				'<IMG>' . $fichier . '</IMG>
-				</IMAGES>');
-			}
 		 }
 		 else //Sinon (la fonction renvoie FALSE).
 		 {
-			  echo 'Echec de l\'upload !';
+			  echo 'Echec de l\'upload !' . $dossier . $fichier;
 		 }
 	}
 	else
@@ -53,6 +40,6 @@
 		 echo $erreur;
 	}
 	
-	header('Location: ../photos.html');
+	header('Location: ../test.html');
 		
 ?>

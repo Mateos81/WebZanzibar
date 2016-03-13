@@ -14,6 +14,11 @@
         {
             if ($_SESSION['connexion'])
             {
+                // Cleanup
+                // TODO Garder toutes les variables, leur affecter les isset, réduire l'indentation dans espPro.php_egg_logo_guid
+                unset($_SESSION['ajout_article']);
+                unset($_SESSION['ajout_util']);
+
                 /*
                  * Split des actions selon quel bouton a été préssé
                  */

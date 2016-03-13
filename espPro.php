@@ -152,13 +152,13 @@
                                 // Pour le titre, on l'a retraité dans le cas où il était trop long,
                                 // il faut donc vérifier si on a un titre long,
                                 // auquel cas il faut enlever les points de suspension
-                                // TODO Titres à la con (juste "...", ...)...
+                                // TODO Gérer les titres "spéciaux" (juste "...", ...)...
                                 $title= str_replace("...", "", $title);
 
                                 // Récupération des données
                                 $reqEdition=
-                                "SELECT * FROM articles " .
-                                "WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "%';";
+                                    "SELECT * FROM articles " .
+                                    "WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "%';";
                                 //echo $reqEdition;
                                 //echo "<br />";
                                 $resEdition= mysqli_query($con, $reqEdition);
@@ -186,10 +186,10 @@
                                 // Cette variable permet aussi de savoir que nous sommes en mode Edition.
                                 // TODO Image
                                 $reqUpdate=
-                                "UPDATE articles " .
-                                "SET " .
-                                "WHERE Title LIKE '" . str_replace("'", "''", $titleEdition) . "%' " .
-                                "AND Content = '" . str_replace("'", "''", $contentEdition) . "';";
+                                    "UPDATE articles " .
+                                    "SET " .
+                                    "WHERE Title LIKE '" . str_replace("'", "''", $titleEdition) . "%' " .
+                                    "AND Content = '" . str_replace("'", "''", $contentEdition) . "';";
 
                                 $_SESSION['rqtUpdate']= $reqUpdate;
                             }

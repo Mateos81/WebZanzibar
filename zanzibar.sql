@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  127.0.0.1
--- Généré le :  Dim 13 Mars 2016 à 22:20
--- Version du serveur :  10.1.10-MariaDB
--- Version de PHP :  7.0.2
+-- Généré le :  Lun 14 Mars 2016 à 22:23
+-- Version du serveur :  10.1.9-MariaDB
+-- Version de PHP :  5.6.15
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -31,7 +31,7 @@ CREATE TABLE `articles` (
   `Date` date NOT NULL,
   `Title` varchar(80) NOT NULL,
   `Content` text NOT NULL,
-  `Picture` blob,
+  `Picture` text,
   `Author` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -40,7 +40,11 @@ CREATE TABLE `articles` (
 --
 
 INSERT INTO `articles` (`Id`, `Date`, `Title`, `Content`, `Picture`, `Author`) VALUES
-(2, '2016-01-29', 'Test avec une image ï¿½ la con', 'Regardez ce magnifique panda, on a l''impression qu''il va vous manger. SANG.', 0x496d616765732f5a616e7a696261725f4e422e6a7067, 'admin');
+(1, '2016-03-14', 'title', 'content', 'Zanzibar-Z-Logo.png', 'admin'),
+(2, '2016-03-14', 'Title', 'ContÃ©nt 3', '', 'admin'),
+(3, '2016-03-14', 'On met un titre Ã  la hauteur de l''image c''est Ã  dire un titre vraiment Ã©norme', 'On met un commentaire Ã  la hauteur de l''image c''est Ã  dire un commentaire vraiment Ã©norme (comme cette pÃ©pite). Enfin c''est pour tester si Ã§a fait pas de la bipppppp.\r\n', '', 'admin'),
+(4, '2016-03-14', 'Titre avec des accent Ã Ã©Ã´iuf', 'Ã©Ã Ã§Ã¨^kÃ®', '', 'admin'),
+(5, '2016-03-14', 'Test avec image bis', 'Ceci est un test avec une image bis', 'Hydrangeas.jpg', 'admin');
 
 -- --------------------------------------------------------
 
@@ -69,8 +73,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Login`, `Pwd`) VALUES
-('admin', 'admin'),
-('test', 'er');
+('admin', 'admin');
 
 --
 -- Index pour les tables exportées
@@ -102,7 +105,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `articles`
 --
 ALTER TABLE `articles`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

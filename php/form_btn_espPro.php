@@ -12,12 +12,13 @@
     {
         if (isset($_SESSION['connexion']))
         {
-                        if ($_SESSION['connexion'])
-             {
-                 // Cleanup
+            if ($_SESSION['connexion'])
+            {
+                // Cleanup
                 // TODO Garder toutes les variables, leur affecter les isset, réduire l'indentation dans espPro.php
-                 unset($_SESSION['ajout_article']);
-                 unset($_SESSION['ajout_util']);
+                unset($_SESSION['ajout_article']);
+				unset($_SESSION['maj_txt_accueil']);
+                unset($_SESSION['ajout_util']);
 
                 /*
                  * Split des actions selon quel bouton a été préssé
@@ -26,6 +27,10 @@
                 {
                     $_SESSION['ajout_article']= true;
                 }
+				else if(isset($_POST['maj_txt_accueil']))
+				{
+					$_SESSION['maj_txt_accueil']= true;
+				}
                 else if (isset($_POST["ajout_util"]))
                 {
                     $_SESSION['ajout_util']= true;

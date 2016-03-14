@@ -1,15 +1,21 @@
 function loadXMLDoc(url)
 {
 	var xmlhttp, txt, x, i, img;
+	
+	var w = window.innerWidth;
+	var h = window.innerHeight;
+			
 	if (window.XMLHttpRequest) {
 		// IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp = new XMLHttpRequest();
 	} else {
 		// IE6, IE5
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
+	}		
+	
 	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {			
+			
 			txt = "<ul>";
 			x = xmlhttp.responseXML.documentElement.getElementsByTagName("IMG");			
 			for (i = 0; i < x.length; i++) {				
@@ -17,7 +23,9 @@ function loadXMLDoc(url)
 				txt = txt + '<li><a onclick="loadPhotos(this);"><img src = "Images/' + img + '" /></a></li>'; 
 			}
 			txt = txt + "</ul>";
+			
 			document.getElementById('slideshow').innerHTML = txt;			
+			
 		}
 	}
 	xmlhttp.open("GET", url, true);
@@ -35,6 +43,8 @@ function loadPhotos(element)
 function loadXMLDocTable(url)
 {
 	var xmlhttp, txt, x, i, img, j;
+	var nbImgs;
+	
 	if (window.XMLHttpRequest) {
 		// IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp = new XMLHttpRequest();
@@ -44,21 +54,22 @@ function loadXMLDocTable(url)
 	}
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			nbImgs = parseInt((window.innerWidth * 0.85 / 300).toString());
 			txt = "<table>";
 			x = xmlhttp.responseXML.documentElement.getElementsByTagName("IMG");	
 			cptImg = 1;
 			cptCb = 1;
-			for (i = 0; i < x.length; i = i+5) {			
+			for (i = 0; i < x.length; i = i+nbImgs) {			
 				// Cas où on a l'image
 				txt += "<tr>";
-				for (j = i; j < i+5 && j < x.length; j++)
+				for (j = i; j < i+nbImgs && j < x.length; j++)
 				{
 					img = x[j].innerHTML;				
 					txt += "<td><img id = 'img" + j + "' src = 'Images/" + img + "' /></td>"; 
 				}
 				txt += "</tr>";
 				txt += "<tr>";
-				for (j = i; j < i+5 && j < x.length; j++)
+				for (j = i; j < i+nbImgs && j < x.length; j++)
 				{
 					txt += "<td><input type='checkbox' id='cb" + j + "'></td>";  
 				}

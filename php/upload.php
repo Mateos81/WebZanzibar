@@ -1,5 +1,5 @@
 <?php
-	
+
 	include("fonctions.php");
 	
 	$dossier = '../Images/';
@@ -8,7 +8,8 @@
 	$taille = filesize($_FILES['openFileDialog']['tmp_name']);
 	$extensions = array('.png', '.gif', '.jpg', '.jpeg');
 	$extension = strrchr($_FILES['openFileDialog']['name'], '.'); 
-	//Début des vérifications de sécurité...
+	
+    //Début des vérifications de sécurité...
 	if(!in_array($extension, $extensions)) //Si l'extension n'est pas dans le tableau
 	{
 		 $erreur = 'Vous devez uploader un fichier de type png, gif, jpg, jpeg, txt ou doc...';
@@ -40,6 +41,5 @@
 		 echo $erreur;
 	}
 	
-	header('Location: ../test.html');
-		
+	header('Location: ../addSupprPhotos.php');		
 ?>

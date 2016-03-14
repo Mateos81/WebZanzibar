@@ -7,7 +7,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <link rel="stylesheet" type="text/css" href="css/ZanzibarSite.css" />
+        <link rel="stylesheet" type="text/css" href="css/ZanzibarSite.css"/>
         <title>Zanzibar</title>
 
         <script>
@@ -30,11 +30,11 @@
         <div>
             <header></header>
         </div>
-        <div id="banderole">
-                <a href="index.php" class=banderole-link>Accueil</a>
-                <a href="photos.html" class=banderole-link>Photos</a>
-                <a href="contact.html" class=banderole-link>Contact</a>
-                <a href="espPro.php" class=banderole-link>Espace Pro</a>
+        <div id='banderole'>
+            <a href="index.php" class=banderole-link>Accueil</a>
+            <a href="photos.php" class=banderole-link>Photos</a>
+            <a href="contact.php" class=banderole-link>Contact</a>
+            <a href="espPro.php" class=banderole-link>Espace Pro</a>
         </div>
 
         <div id="login" >
@@ -104,8 +104,9 @@
                 echo
                     "<div style=\"text-align: center;\">
                         <form action=\"php/form_btn_espPro.php\" method=\"post\">
+							<button id=\"maj_txt_accueil\" name=\"maj_txt_accueil\" class=\"btn_espPro\" type=\"submit\">Modifier le texte d'accueil</button>
                             <button id=\"ajout_article\" name=\"ajout_article\" class=\"btn_espPro\" type=\"submit\">Ajouter un nouvel article</button>
-                            <button id=\"ajout_photos\" name=\"ajout_photos\" class=\"btn_espPro\" type=\"button\" onclick=\"window.location.href='addSupprPhotos.html'\">Ajouter/Supprimer des photos</button>
+                            <button id=\"ajout_photos\" name=\"ajout_photos\" class=\"btn_espPro\" type=\"button\" onclick=\"window.location.href='addSupprPhotos.php'\">Ajouter/Supprimer des photos</button>
                             <button id=\"ajout_util\" name=\"ajout_util\" class=\"btn_espPro\" type=\"submit\">Ajouter un nouvel Administrateur</button>
                         </form>
                     </div>";
@@ -131,7 +132,7 @@
                     // ICI
                     // Gestion du mode Edition
                     // TODO En mode Edition, sélectionner la bonne ligne dans le select
-                    $titleEdition= $contentEdition= "";
+                    $titleEdition= $contentEdition= $pictureEdition= "";
                     $texteBouton= "Ajout";
 
                     if (session_status() != PHP_SESSION_NONE)
@@ -155,12 +156,12 @@
                                 $title= str_replace("...", "", $title);
 
                                 // Récupération des données
-                                                                 $reqEdition=
-                                 "SELECT * FROM articles " .
-                                 "WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "%';";
-                                 //echo $reqEdition;
-                                 //echo "<br />";
-                                 $resEdition= mysqli_query($con, $reqEdition);
+                                $reqEdition=
+                                    "SELECT * FROM articles " .
+                                    "WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "%';";
+                                //echo $reqEdition;
+                                //echo "<br />";
+                                $resEdition= mysqli_query($con, $reqEdition);
 
                                 // Remplissage des champs correspondant du formulaire :
                                 // txtb_titre et ta_content
@@ -168,6 +169,7 @@
                                 {
                                     $titleEdition= $rowEdition['Title'];
                                     $contentEdition= $rowEdition['Content'];
+									$pictureEdition = $rowEdition['Picture'];
                                 }
 
                                 // Changement de libellé pour le bouton
@@ -185,12 +187,12 @@
                                 // Cette variable permet aussi de savoir que nous sommes en mode Edition.
                                 // TODO Image
                                 $reqUpdate=
-                                 "UPDATE articles " .
-                                 "SET " .
-                                 "WHERE Title LIKE '" . str_replace("'", "''", $titleEdition) . "%' " .
-                                 "AND Content = '" . str_replace("'", "''", $contentEdition) . "';";
- 
-                                 $_SESSION['rqtUpdate']= $reqUpdate;
+                                    "UPDATE articles " .
+                                    "SET " .
+                                    "WHERE Title LIKE '" . str_replace("'", "''", $titleEdition) . "%' " .
+                                    "AND Content = '" . str_replace("'", "''", $contentEdition) . "';";
+
+                                $_SESSION['rqtUpdate']= $reqUpdate;
                             }
                         }
                     }
@@ -235,10 +237,14 @@
                                     </tr>
                                 </table>
                                 <input type=\"text\" name=\"txtb_titre\" value=\"" . $titleEdition . "\"/>
-                                <input type=\"text\" name=\"txtb_upload\"/><br />
+
+								 <!-- On limite le fichier à 1Mo -->
+								 <input type='hidden' name='MAX_FILE_SIZE' value='1000000'>
+								 Fichier : <input type='file' name='openFileDialog'>
+								<br />
                                 <textarea name=\"ta_content\" cols=\"50\" rows=\"5\">" . $contentEdition . "</textarea><br />
                                 <div style=\"text-align: center;\">
-                                <button id=\"btn_ajout_maj\" name=\"btn_ajout_maj\" type=\"submit\">" . $texteBouton . "</button>
+                                    <button id=\"btn_ajout_maj\" name=\"btn_ajout_maj\" type=\"submit\">" . $texteBouton . "</button>
                                 </div>
                             </form>
                         </div>
@@ -254,9 +260,13 @@
                 // Mode Ajout admin
                 if ($_SESSION['ajout_util'])
                 {
+                    echo "<div class=\"div_espPro\">";
+
                     // Selon la variable de session ajout_util_succes
                     if (isset($_SESSION['ajout_util_succes']))
                     {
+                        echo "<div style=\"text-align: center;\">";
+
                         if ($_SESSION['ajout_util_succes'] == "ok")
                         {
                             echo "<p style=\"color: green;\">Nouvel admin ajouté avec succès.</p>";
@@ -273,54 +283,73 @@
                             echo "<p style=\"color: red;\">Login déjà existant !</p>";
                         }
 
+                        echo "</div>";
+
                         unset($_SESSION['ajout_util_succes']);
                     }
 
                     echo
-                        "<div class=\"div_espPro\">
-                            <form action=\"php/form_admin.php\" method=\"post\">
+                            "<form action=\"php/form_admin.php\" method=\"post\">
                                 <div style=\"margin-left: 25%; width: 100%;\">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <label>Pseudo</label>
-                                    </td>
-                                    <td>
-                                        <input type=\"text\" name=\"txtb_login\"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Mot de passe</label>
-                                    </td>
-                                    <td>
-                                        <input type=\"password\" name=\"txtb_mdp1\"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Retaper Mot de passe</label>
-                                    </td>
-                                    <td>
-                                        <input type=\"password\" name=\"txtb_mdp2\"/>
-                                    </td>
-                                </tr>
-                                <tr>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <label>Pseudo</label>
+                                            </td>
+                                            <td>
+                                                <input type=\"text\" name=\"txtb_login\"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Mot de passe</label>
+                                            </td>
+                                            <td>
+                                                <input type=\"password\" name=\"txtb_mdp1\"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Retaper Mot de passe</label>
+                                            </td>
+                                            <td>
+                                                <input type=\"password\" name=\"txtb_mdp2\"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td colspan=\"2\">
                                                 <div style=\"text-align: center;\">
-                                        <button id=\"btn_ajout_admin\" name=\"btn_ajout_admin\" type=\"submit\">Ajouter</button>
+                                                    <button id=\"btn_ajout_admin\" name=\"btn_ajout_admin\" type=\"submit\">Ajouter</button>
                                                 </div>
-                                    </td>
-                                </tr>
-                            </table>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </form>
                         </div>";
                 }
                 // TODO Calendar
             }
+			else if (isset($_SESSION['maj_txt_accueil']))
+			{
+				echo
+                        "<div class=\"div_espPro\">
+                            <form action=\"php/form_modif_txt_accueil.php\" method=\"post\">
+                                <div style=\"text-align: center;\">
+                                    <label id=\"lbl_articles\">Editer le texte d'accueil</label><br />
+                                </div>
+                                <div style=\"text-align: center;\">
+                                    <textarea name=\"ta_txt_accueil\" cols=\"50\" rows=\"5\">" . getTexte() . "</textarea><br />
+                                </div>
+                                <div style=\"text-align: center;\">
+									<button id=\"btn_modif_txt_accueil\" name=\"btn_modif_txt_accueil\" type=\"submit\">Mettre à jour</button>
+                                </div>
+                            </form>
+                        </div>
+                    </span>";
+			}
         ?>
 
-        <footer></footer>
+        <footer><?php echo copyright(); ?></footer>
     </body>
 </html>

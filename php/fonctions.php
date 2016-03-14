@@ -1,6 +1,6 @@
 <?php
     //session_start();
-    
+
     /**
      * Connexion à la base de données de Zanzibar.
      *
@@ -18,10 +18,10 @@
             echo "<p style=\"color: #580000 ;\">Erreur de connexion : " . mysqli_connect_error() . "</p>";
             return;
         }
-        
+
         return $con;
     }
-    
+
     /**
      * Copyright affiché en bas de page.
      * @return Un label affiché en bas de page.
@@ -43,13 +43,13 @@
     function decoupage_full_title($full_title)
     {
         $date= substr($full_title, 0, 10);
-        
+
         $dateT= date_create();
         date_date_set($dateT, substr($date, 6, 4), substr($date, 3, 2), substr($date, 0, 2));
-        
+
         $date= date_format($dateT, "Y-m-d");
         $title= substr($full_title, 13, strlen($full_title) - 1);
-        
+
         return array ($date, $title);
     }
 
@@ -63,58 +63,58 @@
         session_destroy();
         header('Location: espPro.php');
     }
-	
+
 	function ajoutImage($fichier)
 	{
 		// On rajoute le nom du fichier dans le fichier xml
 			$xmlFile = "../xml/images.xml";
-			
+
 			$handle = fopen($xmlFile, "r");
 			$contenu = fread($handle, filesize($xmlFile));
 			fclose($handle);
-			
+
 			// On vérifie que le fichier xml ne contient pas déjà le fichier
 			if (!strrpos($contenu, $fichier))
-			{			
+			{
 				$contenu = substr($contenu, 0, strrpos($contenu, '</IMAGES>'));
 				$fp=fopen($xmlFile,"w");
 				fwrite($fp,$contenu .
 				'<IMG>' . $fichier . '</IMG>
 				</IMAGES>');
 			}
-		
+
 	}
-	
+
 	function supprImages($fichier)
 	{
 		// On rajoute le nom du fichier dans le fichier xml
 			$xmlFile = "../xml/images.xml";
-			
+
 			$handle = fopen($xmlFile, "r");
 			$contenu = fread($handle, filesize($xmlFile));
 			fclose($handle);
-						
+
 			// On vérifie que le fichier xml contient le fichier
 			if (strrpos($contenu, $fichier))
-			{			
+			{
 				$contenu = str_replace('<IMG>' . $fichier . '</IMG>', '', $contenu);
 				$fp=fopen($xmlFile,"w");
 				fwrite($fp,$contenu);
 			}
-		
+
 	}
-	
+
 	function nbImgs() {
 		$xmlFile = "../xml/images.xml";
 		$handle = fopen($xmlFile, "r");
 		$contenu = fread($handle, filesize($xmlFile));
 		fclose($handle);
-		
+
 		return substr_count($contenu, '<IMG>');
 	}
-	
+
 	function verifCoche() {
-		
+
 		$url = 'http://localhost/zanzibar/test.html';
 		$doc = new DOMDocument();
 		$doc->loadHTMLFile("http://localhost/zanzibar/test.html");
@@ -126,11 +126,37 @@
 				$doc = new DomDocument;
 				$doc->validateOnParse = true;
 				$doc->Load('http://localhost/zanzibar/test.html');
-				return $doc->getElementById('img' . $i);				
+				return $doc->getElementById('img' . $i);
 			}
-				
+
 		}*/
-		
+
 	}
-	
+
+    /**
+     * Récupération du texte d'accueil depuis un fichier texte.
+     */
+	function getTexte() {
+		$file = "Texte/txtAccueil.txt";
+
+		$handle = fopen($file, "r");
+		$contenu = fread($handle, filesize($file));
+		fclose($handle);
+
+		$lines = explode("\n", $contenu);
+
+		return ($contenu);
+	}
+
+    /**
+     * Modification du fichier texte d'accueil.
+     */
+	function setTexte($txt) {
+		// On rajoute le nom du fichier dans le fichier xml
+		$file = "../Texte/txtAccueil.txt";
+
+		$fp = fopen($file, 'w');
+		fwrite($fp, $txt);
+		fclose($fp);
+	}
 ?>

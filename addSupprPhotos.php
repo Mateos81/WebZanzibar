@@ -12,8 +12,8 @@
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
         <title>Zanzibar</title>
     </head>
-    <body>
 
+    <body>
         <div>
             <header></header>
         </div>
@@ -25,20 +25,24 @@
             <a href="espPro.php" class=banderole-link>Espace Pro</a>
         </div>
 
-        <div id="ajoutImg">
-            <form method="POST" action="php/upload.php" enctype="multipart/form-data">
-                 <!-- On limite le fichier à 1Mo -->
-                 <input type="hidden" name="MAX_FILE_SIZE" value="1000000">
-                 Fichier : <input type="file" name="openFileDialog">
-                 <input type="submit" name="envoyer" value="Envoyer le fichier">
-            </form>
+        <div style="text-align: center;">
+            <div id="ajoutImg">
+                <form method="POST" action="php/upload.php" enctype="multipart/form-data">
+                     <!-- On limite le fichier à 1 Mo -->
+                     <input type="hidden" name="MAX_FILE_SIZE" value="1000000">
+                     Fichier : <input type="file" name="openFileDialog">
+                     <input type="submit" name="envoyer" value="Envoyer le fichier">
+                </form>
+            </div>
+
+            <script>loadXMLDocTable('xml/images.xml');</script>
+
+            <div id="slideshow2"></div>
+            
+            <div style="text-align: center;">
+                <button onclick="supprImgs()">Supprimer</button>
+            </div>
         </div>
-
-        <script>loadXMLDocTable('xml/images.xml');</script>
-
-        <div id="slideshow2"></div>
-
-        <button onclick="supprImgs()">Supprimer</button>
 
         <footer><?php echo copyright(); ?></footer>
     </body>

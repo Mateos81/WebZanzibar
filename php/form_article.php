@@ -30,7 +30,7 @@
                     {
                         // Récupération du titre, du contenu, et si besoin de l'image
                         $title= htmlspecialchars($_POST['txtb_titre']);
-                        // TODO Image
+                        $picture= htmlspecialchars($_POST['openFileDialog']);
                         $content= htmlspecialchars($_POST['ta_content']);
                         if (!(isset($title) AND isset($content)))
                         {
@@ -46,8 +46,8 @@
                         // Formatage de la requête d'ajout
                         // TODO Formatage conditionnel (avec ou sans IMG)
                         $req=
-                        "INSERT INTO articles(Date, Title, Content, Author) " .
-                        "VALUES(NOW(), '" . $title . "', '" . $content . "', '" . $_SESSION['author'] . "');";
+                        "INSERT INTO articles(Date, Title, Content, Picture, Author) " .
+                        "VALUES(NOW(), '" . $title . "', '" . $content . "', '" . $picture . "', '" . $_SESSION['author'] . "');";
                         //echo $req;
 
                         // Exécution de la requête
@@ -64,8 +64,9 @@
 
                         // Récupération des nouveaux titre, contenu, et si besoin image
                         $title= htmlspecialchars($_POST['txtb_titre']);
-                        // TODO Image
+                        $picture= htmlspecialchars($_POST['openFileDialog']);
                         $content= htmlspecialchars($_POST['ta_content']);
+
                         if (!(isset($title) AND isset($content)))
                         {
                             echo "<p style=\"color: red;\">Au moins le titre et du contenu sont attendus.</p>";
@@ -79,7 +80,8 @@
 
                         $clauseSet=
                         "SET Title = '" . str_replace("'", "''", $title) . "', ".
-                        "Content = '" . str_replace("'", "''", $content) . "'";
+                        "Content = '" . str_replace("'", "''", $content) . "', " .
+						"Picture = '" . str_replace("'", "''", $picture) . "'";
 
                         $req= str_replace("SET", $clauseSet, $req);
 
@@ -132,7 +134,7 @@
 
                     // Construction de la requête de suppression
                     // TODO Plutôt utiliser un flag booléen en cas de piratage ? DELETE -> UPDATE
-                    $req= "DELETE FROM articles WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "*';";
+                    $req= "DELETE FROM articles WHERE Date = '" . $date . "' AND Title LIKE '" . $title . "%';";
                     echo $req;
 
                     // Exécution de la requête

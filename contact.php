@@ -7,7 +7,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" type="text/css" href="css/ZanzibarSite.css" />
+		<link rel="stylesheet" type="text/css" href="css/ZanzibarSite.css"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 		<title>Zanzibar</title>
 	</head>
@@ -44,7 +44,7 @@
             </article>
         </div>
         -->
-        
+
         <span style="text-align: center; width: 100%;">
             <span id="Facebook" style="text-align: center; width: 100%;">
                 <div class="fb-page" data-href="https://www.facebook.com/zanzibarchanson" data-tabs="timeline" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">

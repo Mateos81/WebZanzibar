@@ -1,3 +1,8 @@
+<?php
+    session_start();
+    include("php/fonctions.php");
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,9 +31,9 @@
 		</div>
 
 		<div id='banderole'>
-			<a href="index.html" class=banderole-link>Accueil</a>
-			<a href="photos.html" class=banderole-link>Photos</a>
-			<a href="contact.html" class=banderole-link>Contact</a>
+			<a href="index.php" class=banderole-link>Accueil</a>
+			<a href="photos.php" class=banderole-link>Photos</a>
+			<a href="contact.php" class=banderole-link>Contact</a>
 			<a href="espPro.php" class=banderole-link>Espace Pro</a>
 		</div>
 
@@ -52,6 +57,6 @@
             </span>
         </span>
 
-		<footer></footer>
+		<footer><?php echo copyright(); ?></footer>
 	</body>
 </html>

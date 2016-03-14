@@ -23,6 +23,18 @@
     }
     
     /**
+     * Copyright affiché en bas de page.
+     * @return Un label affiché en bas de page.
+     */
+    function copyright()
+    {
+        return
+            "<div style=\"text-align: center;\">
+                <label style=\"color: white;\">Copyright © 2015 - 2016 MATEOS ROUX @ 3iL</label>
+            </div>";
+    }
+
+    /**
      * Prend un titre complet au format "dd/mm/yyyy - Title",
      * et le découpe en deux variables prêtes à être utilisées dans une requête.
      *
